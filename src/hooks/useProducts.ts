@@ -67,37 +67,6 @@ export const useProducts = () => {
     return products.filter(product => product.category === categorySlug);
   };
 
-  const updateProduct = async (id: number, patch: Partial<any>) => {
-    try {
-      const { data, error } = await supabase
-        .from('products')
-        .update(patch)
-        .eq('id', id)
-        .select()
-        .single();
-      if (error) throw error;
-      await fetchProducts();
-      return { data, error: null };
-    } catch (err) {
-      const message = err instanceof Error ? err.message : 'An error occurred';
-      console.error('Error updating product:', err);
-      return { data: null, error: message };
-    }
-  };
-
-  const deleteProduct = async (id: number) => {
-    try {
-      const { error } = await supabase.from('products').delete().eq('id', id);
-      if (error) throw error;
-      await fetchProducts();
-      return { error: null };
-    } catch (err) {
-      const message = err instanceof Error ? err.message : 'An error occurred';
-      console.error('Error deleting product:', err);
-      return { error: message };
-    }
-  };
-
   useEffect(() => {
     fetchProducts();
     fetchCategories();
@@ -140,7 +109,5 @@ export const useProducts = () => {
     getFeaturedProducts,
     getProductsByCategory,
     addProduct,
-    updateProduct,
-    deleteProduct,
   };
 };

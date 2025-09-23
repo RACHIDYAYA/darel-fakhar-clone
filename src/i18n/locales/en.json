@@ -116,41 +116,5 @@
     "featured": "Featured",
     "freeShipping": "Free Shipping",
     "bannerText": "Authentic ceramics and tiles from Al-Hassania Cooperative 🏺✨ Quality in your hands... Contact us: 0656861536"
-  },
-  "footer": {
-    "title": "Traditional Pottery in Safi",
-    "description": "The Moroccan city of Safi is one of North Africa’s oldest pottery centers. Artisans pass down skills of clay shaping, decorative glazing, and firing in traditional kilns. Pieces feature natural colors and Andalusian and Amazigh motifs, combining beauty and function for daily use and décor.",
-    "relatedLinks": "Related Links",
-    "quickLinks": "Quick Links",
-    "followUs": "Follow Us",
-    "contactUs": "Contact Us",
-    "keywords": {
-      "craft": "Pottery Craft",
-      "sell": "Pottery for Sale",
-      "safi": "Safi Pottery",
-      "online": "Buy Pottery Online"
-    },
-    "links": {
-      "home": "Home",
-      "about": "About Us",
-      "products": "Products",
-      "contact": "Contact"
-    },
-    "copyright": "© 2025 Al Hassaniya - جميع الحقوق محفوظة"
-  },
-  "aboutPage": {
-    "title": "About Us",
-    "lead1": "Al Hassaniya Cooperative for traditional pottery and tiles is a leading craft institution in Safi, blending Moroccan authenticity with modern creativity. Thanks to our artisans' expertise and production quality, we have evolved beyond a traditional workshop into a fully-fledged factory capable of meeting both local and international demand.",
-    "lead2": "We don't only offer artistic and decorative pieces; we also provide large-scale production of pottery and tiles in all forms, making us a trusted partner for major retailers and distributors who seek quality and continuity.",
-    "features": {
-      "quality": {"title": "High Quality & Authenticity", "desc": "Authentic Moroccan traditional products with superior craftsmanship for durability and beauty."},
-      "wholesale": {"title": "Wholesale Ready", "desc": "Bulk purchasing options for retailers and large markets with consistent production capacity."},
-      "range": {"title": "Wide Product Range", "desc": "Plates, decor, tiles, and roofing terracotta in various sizes and motifs to suit all tastes."},
-      "experience": {"title": "Visitor Experience", "desc": "A rich experience for visitors eager to discover the secrets of traditional craftsmanship in Safi."}
-    },
-    "mission": {
-      "title": "Our Vision & Mission",
-      "desc": "We believe every piece carries the spirit and heritage of Safi. We aspire to bridge Moroccan traditional craftsmanship with global markets while preserving identity and quality."
-    }
   }
 }

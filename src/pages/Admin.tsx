@@ -8,31 +8,24 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useOrders, Order } from '@/hooks/useOrders';
-import { Loader2, Eye, Plus, Edit, Trash2 } from 'lucide-react';
+import { useProducts } from '@/hooks/useProducts';
+import { Loader2, Eye } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useCategories } from '@/hooks/useCategories';
 import AdminAddCategoryForm from '@/components/AdminAddCategoryForm';
 import { Switch } from '@/components/ui/switch';
 import { useAdminPosts } from '@/hooks/useAdminPosts';
 import AdminAddPostForm from '@/components/AdminAddPostForm';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { useProducts } from '@/hooks/useProducts';
 
 const Admin = () => {
   const { t } = useTranslation();
   const { toast } = useToast();
   const { orders, loading: ordersLoading, updateOrderStatus } = useOrders();
-  const { products, updateProduct, deleteProduct, refetch } = useProducts();
+  const { products } = useProducts();
   const { categories, updateCategory, deleteCategory, fetchCategories } = useCategories();
   const { posts, updatePost, deletePost, fetchAll: fetchAllPosts } = useAdminPosts();
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [tabValue, setTabValue] = useState<'orders' | 'products' | 'categories' | 'blog'>('orders');
-  const [addOpen, setAddOpen] = useState(false);
-  const [editOpen, setEditOpen] = useState(false);
-  const [editing, setEditing] = useState<any | null>(null);
-  const [editForm, setEditForm] = useState<any>({});
 
   const handleStatusUpdate = async (orderId: number, newStatus: Order['status']) => {
     const { error } = await updateOrderStatus(orderId, newStatus);
@@ -158,23 +151,13 @@ const Admin = () => {
           </TabsContent>
 
           <TabsContent value="products" className="space-y-4">
-            <div className="flex justify-between items-center">
-              <h2 className="text-xl font-semibold">{t('admin.products')}</h2>
-              <Dialog open={addOpen} onOpenChange={setAddOpen}>
-                <DialogTrigger asChild>
-                  <Button>
-                    <Plus className="h-4 w-4 mr-2" />
-                    إضافة منتج جديد
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="max-w-3xl">
-                  <DialogHeader>
-                    <DialogTitle>إضافة منتج جديد / Add New Product</DialogTitle>
-                  </DialogHeader>
-                  <AddProductForm onSuccess={() => { setAddOpen(false); refetch(); }} />
-                </DialogContent>
-              </Dialog>
-            </div>
+            <AddProductForm onSuccess={() => {
+              toast({
+                title: t('common.success'),
+                description: 'Product added successfully',
+              });
+            }} />
+
             <Card id="products">
               <CardHeader>
                 <CardTitle>{t('admin.products')}</CardTitle>
@@ -206,109 +189,6 @@ const Admin = () => {
                       {product.is_featured && (
                         <Badge variant="secondary" className="mt-1">Featured</Badge>
                       )}
-                      <div className="mt-3 flex gap-2">
-                        <Dialog open={editOpen && editing?.id === product.id} onOpenChange={(o) => { if (!o) { setEditOpen(false); setEditing(null); } }}>
-                          <Button variant="outline" size="sm" onClick={() => {
-                            setEditing(product);
-                            setEditForm({
-                              name_ar: product.name_ar || '',
-                              name_en: product.name_en || '',
-                              name_fr: product.name_fr || '',
-                              description_ar: product.description_ar || '',
-                              description_en: product.description_en || '',
-                              description_fr: product.description_fr || '',
-                              price: product.price || 0,
-                              sale_price: product.sale_price ?? '',
-                              category: product.category || '',
-                              stock: product.stock || 0,
-                              is_featured: !!product.is_featured,
-                            });
-                            setEditOpen(true);
-                          }}>
-                            <Edit className="h-4 w-4 mr-1" /> تعديل
-                          </Button>
-                          <DialogContent className="max-w-2xl">
-                            <DialogHeader>
-                              <DialogTitle>تعديل المنتج</DialogTitle>
-                            </DialogHeader>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                              <div>
-                                <label className="text-sm">الاسم (AR)</label>
-                                <Input value={editForm.name_ar} onChange={(e) => setEditForm({ ...editForm, name_ar: e.target.value })} />
-                              </div>
-                              <div>
-                                <label className="text-sm">Name (EN)</label>
-                                <Input value={editForm.name_en} onChange={(e) => setEditForm({ ...editForm, name_en: e.target.value })} />
-                              </div>
-                              <div>
-                                <label className="text-sm">Nom (FR)</label>
-                                <Input value={editForm.name_fr} onChange={(e) => setEditForm({ ...editForm, name_fr: e.target.value })} />
-                              </div>
-                              <div>
-                                <label className="text-sm">السعر</label>
-                                <Input type="number" step="0.01" value={editForm.price} onChange={(e) => setEditForm({ ...editForm, price: parseFloat(e.target.value) })} />
-                              </div>
-                              <div>
-                                <label className="text-sm">سعر البيع</label>
-                                <Input type="number" step="0.01" value={editForm.sale_price ?? ''} onChange={(e) => setEditForm({ ...editForm, sale_price: e.target.value ? parseFloat(e.target.value) : null })} />
-                              </div>
-                              <div>
-                                <label className="text-sm">الفئة</label>
-                                <select className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm" value={editForm.category} onChange={(e) => setEditForm({ ...editForm, category: e.target.value })}>
-                                  {categories.map((c) => (
-                                    <option key={c.slug} value={c.slug}>{c.name_ar} / {c.name_en}</option>
-                                  ))}
-                                </select>
-                              </div>
-                              <div>
-                                <label className="text-sm">المخزون</label>
-                                <Input type="number" value={editForm.stock} onChange={(e) => setEditForm({ ...editForm, stock: parseInt(e.target.value || '0', 10) })} />
-                              </div>
-                              <div className="md:col-span-2">
-                                <label className="text-sm">الوصف (AR)</label>
-                                <Textarea rows={3} value={editForm.description_ar} onChange={(e) => setEditForm({ ...editForm, description_ar: e.target.value })} />
-                              </div>
-                              <div className="md:col-span-2">
-                                <label className="text-sm">Description (EN)</label>
-                                <Textarea rows={3} value={editForm.description_en} onChange={(e) => setEditForm({ ...editForm, description_en: e.target.value })} />
-                              </div>
-                              <div className="md:col-span-2">
-                                <label className="text-sm">Description (FR)</label>
-                                <Textarea rows={3} value={editForm.description_fr} onChange={(e) => setEditForm({ ...editForm, description_fr: e.target.value })} />
-                              </div>
-                              <div className="md:col-span-2 flex items-center gap-2">
-                                <input type="checkbox" id="edit_is_featured" checked={!!editForm.is_featured} onChange={(e) => setEditForm({ ...editForm, is_featured: e.target.checked })} />
-                                <label htmlFor="edit_is_featured" className="text-sm">منتج مميز</label>
-                              </div>
-                              <div className="md:col-span-2 flex justify-end gap-2">
-                                <Button variant="secondary" onClick={() => { setEditOpen(false); setEditing(null); }}>إلغاء</Button>
-                                <Button onClick={async () => {
-                                  if (!editing) return;
-                                  const payload = { ...editForm };
-                                  const { error } = await updateProduct(editing.id, payload);
-                                  if (error) {
-                                    toast({ title: t('common.error'), description: error, variant: 'destructive' });
-                                  } else {
-                                    toast({ title: t('common.success'), description: 'Product updated' });
-                                    setEditOpen(false);
-                                    setEditing(null);
-                                  }
-                                }}>حفظ</Button>
-                              </div>
-                            </div>
-                          </DialogContent>
-                        </Dialog>
-                        <Button variant="destructive" size="sm" onClick={async () => {
-                          const { error } = await deleteProduct(product.id);
-                          if (error) {
-                            toast({ title: t('common.error'), description: error, variant: 'destructive' });
-                          } else {
-                            toast({ title: t('common.success'), description: 'Product deleted' });
-                          }
-                        }}>
-                          <Trash2 className="h-4 w-4 mr-1" /> حذف
-                        </Button>
-                      </div>
                     </div>
                   ))}
 

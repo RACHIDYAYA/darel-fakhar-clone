@@ -19,7 +19,6 @@ import Logout from "./pages/Logout";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 import NotFound from "./pages/NotFound";
-import About from "./pages/About";
 import './i18n';
 
 const queryClient = new QueryClient();
@@ -41,7 +40,6 @@ const App = () => (
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/blog" element={<Blog />} />
                 <Route path="/blog/:slug" element={<BlogPost />} />
-                <Route path="/about" element={<About />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/logout" element={<Logout />} />
